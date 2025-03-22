@@ -1,13 +1,22 @@
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
 
-defineProps({
-  withdrawals: {
-    type: Object,
-    required: true
-  }
-})
+interface Withdrawal {
+  id: number;
+  created_at: string;
+  amount: number;
+  payment_method: string;
+  status: string;
+}
+
+interface WithdrawalsPagination {
+  data: Withdrawal[];
+  // Otros campos de paginación si los hay
+}
+
+defineProps<{
+  withdrawals: WithdrawalsPagination;
+}>();
 
 const columns = [
   { key: 'date', label: 'Date' },

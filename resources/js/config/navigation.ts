@@ -1,4 +1,4 @@
-import { Folder, LayoutGrid, Settings, User, FileText, BarChart, Wallet } from 'lucide-vue-next';
+import { Folder, LayoutGrid, Settings, FileText, BarChart, Wallet, MessageCircleReply, Users } from 'lucide-vue-next';
 import { type NavItem } from '@/types';
 
 export const mainNavItems: NavItem[] = [
@@ -7,31 +7,36 @@ export const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: LayoutGrid,
     },
+    // {
+    //     title: 'Profile',
+    //     href: '/profile',
+    //     icon: User,
+    //     permission: 'ver_usuarios'
+    // },
     {
-        title: 'Profile',
-        href: '/profile',
-        icon: User,
-        permission: 'ver_usuarios'
+        title: 'Red',
+        href: '/network',
+        icon: Users,
     },
     {
-        title: 'Settings',
+        title: 'Configuración',
         href: '/settings',
         icon: Settings,
         children: [
             {
                 title: 'General',
-                href: '/settings/general',
+                href: '/settings/profile',
                 icon: Settings,
             },
             {
-                title: 'Security',
-                href: '/settings/security',
-                icon: Settings,
+                title: 'Billetera',
+                href: '/settings/wallet',
+                icon: Wallet,
             },
             {
-                title: 'Notifications',
-                href: '/settings/notifications',
-                icon: Settings,
+                title: 'WhatsApp',
+                href: '/settings/whatsapp',
+                icon: MessageCircleReply,
             }
         ]
     },

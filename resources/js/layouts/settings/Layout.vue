@@ -26,6 +26,10 @@ const sidebarNavItems: NavItem[] = [
         title: 'Wallet',
         href: '/settings/wallet',
     },
+    {
+        title: 'WhatsApp',
+        href: '/settings/whatsapp',
+    },
 ];
 
 const filteredNavItems = filterNavItems(sidebarNavItems);
@@ -36,10 +40,10 @@ const currentPath = window.location.pathname;
 
 <template>
     <div class="px-4 py-6">
-        <Heading title="Settings" description="Manage your profile and account settings" />
+        <Heading title="Configuración" description="Administra tu perfil y la configuración de tu cuenta" />
 
         <div class="flex flex-col space-y-8 md:space-y-0 lg:flex-row lg:space-x-12 lg:space-y-0">
-            <aside class="w-full max-w-xl lg:w-48">
+            <aside class="w-full max-w-xl lg:w-1/4">
                 <nav class="flex flex-col space-x-0 space-y-1">
                     <Button
                         v-for="item in filteredNavItems"
@@ -57,8 +61,8 @@ const currentPath = window.location.pathname;
 
             <Separator class="my-6 md:hidden" />
 
-            <div class="flex-1 md:max-w-2xl">
-                <section class="max-w-xl space-y-12">
+            <div class="flex-1 md:max-w-3xl">
+                <section class="max-w-2xl space-y-12">
                     <slot />
                 </section>
             </div>

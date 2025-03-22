@@ -1,17 +1,25 @@
-
-<script setup>
+<script setup lang="ts">
 import { useForm } from '@inertiajs/vue3'
-import { ref } from 'vue'
 
-const props = defineProps({
-  paymentMethods: Array,
-  currencies: Array
-})
+interface PaymentMethod {
+  id: number;
+  name: string;
+}
+
+interface Currency {
+  code: string;
+  name: string;
+}
+
+defineProps<{
+  paymentMethods: PaymentMethod[];
+  currencies: Currency[];
+}>();
 
 const form = useForm({
   payment_method_id: '',
   currency: '',
-  amount: null,
+  amount: null as number | null,
   notes: ''
 })
 

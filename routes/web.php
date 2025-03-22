@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    return redirect('login');
 })->name('home');
 
 Route::get('dashboard', function () {
@@ -15,7 +15,4 @@ Route::get('dashboard', function () {
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
 require __DIR__.'/withdrawal.php';
-
-// Route::middleware(['auth'])->group(function () {
-//     Route::resource('withdrawals', WithdrawalController::class);
-// });
+require __DIR__.'/network.php';

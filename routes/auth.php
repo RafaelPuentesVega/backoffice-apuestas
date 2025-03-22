@@ -14,7 +14,17 @@ Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    // Rutas para verificación y registro
+    Route::post('/send-verification', [RegisteredUserController::class, 'sendVerificationCode'])->name('send.verification');
+    Route::post('/verify-email-code', [RegisteredUserController::class, 'verifyEmailCode'])->name('verify.email.code');
+    Route::post('/verify-whatsapp-code', [RegisteredUserController::class, 'verifyWhatsappCode'])->name('verify.whatsapp.code');
+    Route::post('/register', [RegisteredUserController::class, 'store'])->name('register');
+
+    // Route::post('register', [RegisteredUserController::class, 'store']);
+    // Route::post('/send-verification', [RegisteredUserController::class, 'sendVerificationCode'])
+    //     ->name('send.verification');
+
+    // Route::post('/register', [RegisteredUserController::class, 'store'])->name('verify.code');
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');

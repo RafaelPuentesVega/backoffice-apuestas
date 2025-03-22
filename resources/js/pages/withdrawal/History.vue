@@ -1,6 +1,5 @@
-<script setup>
+<script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Button } from '@/components/ui/button';
 import { 
@@ -15,12 +14,22 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Link } from '@inertiajs/vue3';
 
-const props = defineProps({
-    withdrawals: Array
-});
+// Definir el tipo para los retiros
+interface Withdrawal {
+    id: number;
+    amount: number;
+    status: string;
+    date: string;
+    user: string;
+    account: string;
+}
+
+defineProps<{
+    withdrawals: Withdrawal[];
+}>();
 
 // Función para determinar el color del badge según el estado
-const getStatusClass = (status) => {
+const getStatusClass = (status: string): string => {
     switch(status) {
         case 'completado':
             return 'bg-green-500 text-white';
@@ -34,7 +43,7 @@ const getStatusClass = (status) => {
 };
 
 // Formatear montos a formato de moneda
-const formatCurrency = (amount) => {
+const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat('es-AR', {
         style: 'currency',
         currency: 'ARS'

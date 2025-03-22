@@ -1,54 +1,62 @@
-<script setup>
-import { ref, provide, computed, watch } from 'vue';
+<script setup lang="ts">
+import { computed, provide, ref, toRef, watch } from 'vue'
 
-const props = defineProps({
-  modelValue: {
-    type: [String, Number],
-    default: undefined
+const props = defineProps<{
+  modelValue?: string
+  defaultValue?: string
+  disabled?: boolean
+}>()
+
+const emit = defineEmits(['update:modelValue'])
+
+// Inicializar con el valor del modelo o el valor por defecto
+const selectedValue = ref(props.modelValue || props.defaultValue || '')
+const isOpen = ref(false)
+
+// Observar cambios en el modelValue para mantener sincronizado
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (value !== undefined) {
+      selectedValue.value = value
+    }
   },
-  defaultValue: {
-    type: [String, Number],
-    default: undefined
-  },
-  disabled: {
-    type: Boolean,
-    default: false
-  },
-  required: {
-    type: Boolean,
-    default: false
+  { immediate: true } // Ejecutar inmediatamente para sincronizar al inicio
+)
+
+// Actualizar el valor cuando se selecciona una opción
+const updateValue = (value: string) => {
+  selectedValue.value = value
+  emit('update:modelValue', value)
+  isOpen.value = false
+}
+
+// Alternar el estado del dropdown
+const toggleOpen = () => {
+  // Siempre permitir abrir el dropdown a menos que explícitamente se pase disabled=true
+  if (props.disabled !== true) {
+    isOpen.value = !isOpen.value
   }
-});
+}
 
-const emit = defineEmits(['update:modelValue']);
+// Cerrar el dropdown
+const closeDropdown = () => {
+  isOpen.value = false
+}
 
-// Usar un enfoque más simple para el v-model
-const selectedValue = ref(props.modelValue || props.defaultValue);
-
-watch(() => props.modelValue, (newValue) => {
-  selectedValue.value = newValue;
-});
-
-watch(selectedValue, (newValue) => {
-  emit('update:modelValue', newValue);
-});
-
-const open = ref(false);
-
+// Proporcionar el contexto a los componentes hijos
 provide('select', {
-  selectedValue,
-  open,
-  disabled: computed(() => props.disabled),
-  required: computed(() => props.required),
-  select: (value) => {
-    selectedValue.value = value;
-    open.value = false;
-  }
-});
+  selectedValue: toRef(selectedValue),
+  isOpen: toRef(isOpen),
+  toggleOpen,
+  closeDropdown,
+  updateValue,
+  disabled: computed(() => props.disabled === true)
+})
 </script>
 
 <template>
   <div class="relative">
     <slot />
   </div>
-</template> 
+</template>

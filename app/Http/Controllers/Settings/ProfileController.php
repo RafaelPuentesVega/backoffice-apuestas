@@ -18,9 +18,15 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $user = $request->user();
+        $wallet = $user->wallet;
+
         return Inertia::render('settings/Profile', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => $request->session()->get('status'),
+            'wallet' => $wallet,
+            'code_referral' => $user->code_referral,
+            'whatsapp_number' => $user->country_code . ' ' . $user->whatsapp_number,
         ]);
     }
 
