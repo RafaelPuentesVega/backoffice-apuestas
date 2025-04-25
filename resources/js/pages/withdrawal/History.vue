@@ -46,9 +46,36 @@ const getStatusClass = (status: string): string => {
 const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat('es-AR', {
         style: 'currency',
-        currency: 'ARS'
+        currency: 'USD'
     }).format(amount);
 };
+
+// Método para formatear fecha y hora para Bogotá, Colombia
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleString('es-CO', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'America/Bogota'
+  });
+};
+
+// Función para formatear la dirección de wallet
+const formatWalletAddress = (address: string): string => {
+  if (!address) return '';
+  
+  if (address.length <= 8) return address;
+  
+  const start = address.slice(0, 4);
+  const end = address.slice(-4);
+  
+  return `${start}********${end}`;
+};
+
 </script>
 
 <template>
@@ -63,14 +90,13 @@ const formatCurrency = (amount: number): string => {
                 </Link>
             </div>
             
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="rounded-lg shadow-md overflow-hidden">
                 <Table>
                     <TableCaption>Listado de retiros realizados</TableCaption>
                     <TableHeader>
                         <TableRow>
                             <TableHead class="w-[100px]">ID</TableHead>
-                            <TableHead>Usuario</TableHead>
-                            <TableHead>Cuenta</TableHead>
+                            <TableHead>Wallet</TableHead>
                             <TableHead>Monto</TableHead>
                             <TableHead>Fecha</TableHead>
                             <TableHead>Estado</TableHead>
@@ -79,10 +105,9 @@ const formatCurrency = (amount: number): string => {
                     <TableBody>
                         <TableRow v-for="withdrawal in withdrawals" :key="withdrawal.id">
                             <TableCell class="font-medium">{{ withdrawal.id }}</TableCell>
-                            <TableCell>{{ withdrawal.user }}</TableCell>
-                            <TableCell>{{ withdrawal.account }}</TableCell>
+                            <TableCell>{{ formatWalletAddress(withdrawal.wallet_address) }}</TableCell>
                             <TableCell>{{ formatCurrency(withdrawal.amount) }}</TableCell>
-                            <TableCell>{{ withdrawal.date }}</TableCell>
+                            <TableCell>{{ formatDate(withdrawal.created_at)}}</TableCell>
                             <TableCell>
                                 <Badge :class="getStatusClass(withdrawal.status)">
                                     {{ withdrawal.status }}

@@ -3,6 +3,8 @@ import type { LucideIcon } from 'lucide-vue-next';
 
 export interface Auth {
     user: User;
+    permissions: string;
+    roles: string;
 }
 
 export interface BreadcrumbItem {
@@ -46,6 +48,8 @@ export interface User {
     network_balance?: number;
     code_referral?: string;
     wallet?: Wallet;
+    membership_id?: number;
+    membership?: Membresia;
 }
 
 export interface Wallet {
@@ -55,6 +59,17 @@ export interface Wallet {
     type: string;
     created_at: string;
     updated_at: string;
+}
+
+export interface Membresia {
+    id: number;
+    nombre: string;
+    precio: number;
+    porcentaje_rendimiento: number;
+    porcentaje_comision_sponsor: number;
+    comision_directa: number;
+    created_at?: string;
+    updated_at?: string;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

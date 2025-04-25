@@ -116,13 +116,15 @@ class WalletController extends Controller
         $currentWallet = Wallet::where('user_id', $user->id)->first();
         
 
-            
-        // Guardar en el historial
-        WalletHistory::create([
-            'user_id' => $user->id,
-            'address' => $currentWallet->address,
-            'type' => $currentWallet->type
-        ]);
+        if ($currentWallet) {
+            // Guardar en el historial
+            WalletHistory::create([
+                'user_id' => $user->id,
+                'address' => $currentWallet->address,
+                'type' => $currentWallet->type
+            ]);
+        }
+
         
         
         // Actualizar o crear el registro de billetera

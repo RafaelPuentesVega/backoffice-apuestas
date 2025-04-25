@@ -14,12 +14,14 @@ class BalanceTransaction extends Model
         'transaction_type',
         'balance_type',
         'amount',
+        'balance_after',
         'status',
         'description',
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'balance_after' => 'decimal:2',
     ];
 
     public function user()

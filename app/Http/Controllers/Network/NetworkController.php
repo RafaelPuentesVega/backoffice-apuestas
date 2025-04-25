@@ -19,7 +19,7 @@ class NetworkController extends Controller
         $user = Auth::user();
         
         // Get direct referrals (users with sponsor_id = current user's id)
-        $directReferrals = User::where('sponsor_id', $user->code_referral)
+        $directReferrals = User::where('sponsor_id', $user->id)
             ->select('id', 'name', 'email', 'created_at')
             ->orderBy('created_at', 'desc')
             ->get();

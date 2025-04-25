@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('comision_directa', 10, 2)->default(0); // Comisión directa al sponsor
             $table->decimal('porcentaje_rendimiento', 5, 2)->default(0); // % de rendimiento para el usuario
             $table->decimal('porcentaje_comision_sponsor', 5, 2)->default(0); // % del rendimiento que se da al sponsor
+            $table->enum('status', ['pendiente', 'activa'])->default('pendiente');
             $table->timestamps();
         });
     }

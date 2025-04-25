@@ -18,7 +18,7 @@ class PasswordController extends Controller
      */
     public function edit(Request $request): Response
     {
-        user_can(['ver-reportes']);
+        // user_can(['ver-reportes']);
 
         return Inertia::render('settings/Password', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,

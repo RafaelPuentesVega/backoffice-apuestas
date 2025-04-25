@@ -54,7 +54,7 @@ class RegisteredUserController extends Controller
             
             // Guardar código de email en la base de datos
             VerificationCode::updateOrCreate(
-                ['email' => $request->email],
+                ['email' => $request->email, 'type' => 'registration'],
                 [
                     'code' => $emailCode,
                     'expires_at' => now()->addMinutes(5)
@@ -72,7 +72,6 @@ class RegisteredUserController extends Controller
             // Enviar código por email
             Mail::to($request->email)->send(new VerificationCodeMail($emailCode));
             
-            // Enviar código por WhatsApp
             $whatsappApi = new WhatsappApiController();
             $whatsappResult = $whatsappApi->sendVerificationCode(
                 $request->country_code,
@@ -272,6 +271,6 @@ class RegisteredUserController extends Controller
             'country_code'
         ]);
         
-        return to_route('dashboard');
+        return to_route('membership.select');
     }
 }

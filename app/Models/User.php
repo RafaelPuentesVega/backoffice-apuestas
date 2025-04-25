@@ -25,7 +25,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'membership_id',
+        'pending_membership_id',
+        'membership_expires_at',
         'sponsor_id',
+        'is_admin',
         'code_referral',
         'phone',
         'whatsapp_number',
@@ -33,7 +37,6 @@ class User extends Authenticatable
         'capital_balance',
         'earnings_balance',
         'network_balance',
-        'membership_type',
         'referrer_id',
     ];
 
@@ -100,6 +103,14 @@ class User extends Authenticatable
     }
     
     /**
+     * Obtiene los depósitos del usuario.
+     */
+    public function deposits(): HasMany
+    {
+        return $this->hasMany(Deposit::class);
+    }
+    
+    /**
      * Obtiene los códigos de verificación del usuario.
      */
     public function verificationCodes(): HasMany
@@ -133,5 +144,77 @@ class User extends Authenticatable
     public function balanceTransactions()
     {
         return $this->hasMany(BalanceTransaction::class);
+    }
+
+    public function membership()
+    {
+        return $this->belongsTo(Membresia::class, 'membership_id');
+    }
+
+    public function pendingMembership()
+    {
+        return $this->belongsTo(Membresia::class, 'pending_membership_id');
+    }
+
+    /**
+     * Obtiene el historial de membresías del usuario.
+     */
+    public function membershipHistory(): HasMany
+    {
+        return $this->hasMany(MembershipHistory::class);
+    }
+
+    /**
+     * Determine if the user's membership has expired.
+     *
+     * @return bool
+     */
+    public function hasMembershipExpired(): bool
+    {
+        if ($this->membership_expires_at === null) {
+            return false;
+        }
+
+        return now()->greaterThan($this->membership_expires_at);
+    }
+
+    /**
+     * Get the days remaining until membership expiration.
+     *
+     * @return int|null
+     */
+    public function getMembershipRemainingDays(): ?int
+    {
+        if ($this->membership_expires_at === null) {
+            return null;
+        }
+
+        $expiresAt = \Carbon\Carbon::parse($this->membership_expires_at);
+        $now = now();
+
+        if ($now->greaterThan($expiresAt)) {
+            return 0;
+        }
+
+        return $now->diffInDays($expiresAt);
+    }
+
+    /**
+     * Extend membership by specified number of days.
+     *
+     * @param int $days
+     * @return void
+     */
+    public function extendMembership(int $days): void
+    {
+        $currentExpiration = $this->membership_expires_at ? \Carbon\Carbon::parse($this->membership_expires_at) : now();
+        
+        // If membership has expired, extend from now
+        if ($currentExpiration->lessThan(now())) {
+            $currentExpiration = now();
+        }
+        
+        $this->membership_expires_at = $currentExpiration->addDays($days);
+        $this->save();
     }
 }

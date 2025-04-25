@@ -6,10 +6,15 @@ import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import Select from '@/components/ui/select/Select.vue';
+import SelectTrigger from '@/components/ui/select/SelectTrigger.vue';
+import SelectValue from '@/components/ui/select/SelectValue.vue';
+import SelectContent from '@/components/ui/select/SelectContent.vue';
+import SelectItem from '@/components/ui/select/SelectItem.vue';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
-import { countries } from '@/models/countries'; 
+import { countries } from '@/models/countries.js'; 
 import DualVerificationModal from '@/components/DualVerificationModal.vue';
 import axios from 'axios';
 
@@ -113,6 +118,12 @@ const confirmRegistration = () => {
     }
 };
 
+const formatCountryCode = (code: string): string => { 
+  const country = countries.find(c => c.code === code);
+  return country ? country.name : code; 
+};
+
+
 </script>
 
 <template>
@@ -174,11 +185,21 @@ const confirmRegistration = () => {
                 <div class="grid gap-2">
                     <Label for="phone">Número de Teléfono</Label>
                     <div class="flex items-center gap-2">
-                        <select id="country_code" :tabindex="5" v-model="form.country_code" class="border p-2 rounded">
-                            <option v-for="country in countries" :key="country.code" :value="country.code">
-                                {{ country.name }} ({{ country.code }})
-                            </option>
-                        </select>
+
+
+                        <Select  id="country_code" class="  p-2 rounded gap-2" :tabindex="5"  v-model="form.country_code" required>
+                                    <SelectTrigger :class="{ 'border-red-500': form.errors.country_code }">
+                                        <SelectValue placeholder="Seleccione tipo de red">
+                                            {{ formatCountryCode(form.country_code) }}
+                                        </SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem v-for="country in countries" :key="country.code" :value="country.code">
+                                            {{ country.name }} ({{ country.code }})
+                                        </SelectItem>
+                                    </SelectContent>
+                        </Select>
+                                
                         <Input
                             id="phone"
                             type="text"
@@ -204,7 +225,7 @@ const confirmRegistration = () => {
                         readonly 
                         :tabindex="7"
                         placeholder="No sponsor" 
-                        class="bg-gray-100 cursor-not-allowed" 
+                        class="cursor-not-allowed" 
                     />
                     <InputError :message="form.errors.sponsor_id" />
                 </div>

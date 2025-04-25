@@ -178,6 +178,23 @@ const getWalletTypeName = (typeId: string) => {
                     
                     <CardContent>
                         <form @submit.prevent="handleMainAction" class="space-y-6">
+                                                    <!-- Billetera actual (si existe) -->
+                            <div v-if="wallet" class="grid gap-2 mb-4">
+                                <Label for="current_wallet">Billetera Actual</Label>
+                                <Input
+                                    id="current_wallet"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    :value="wallet.address"                                    
+                                    v-model="wallet.address"
+                                    disabled
+                                />
+                                <p class="text-sm text-gray-500">
+                                    <Info class="inline h-4 w-4 mr-1" />
+                                    Esta es su billetera actual registrada como {{ getWalletTypeName(wallet.type) }}.
+                                </p>
+                            </div>
+
                             <div class="grid gap-2">
                                 <Label for="wallet_type">Tipo de Red</Label>
                                 <Select 
@@ -200,22 +217,7 @@ const getWalletTypeName = (typeId: string) => {
                                 <InputError class="mt-1" :message="form.errors.wallet_type" />
                             </div>
 
-                            <!-- Billetera actual (si existe) -->
-                            <div v-if="wallet" class="grid gap-2 mb-4">
-                                <Label for="current_wallet">Billetera Actual</Label>
-                                <Input
-                                    id="current_wallet"
-                                    type="text"
-                                    class="mt-1 block w-full"
-                                    :value="wallet.address"                                    
-                                    v-model="wallet.address"
-                                    disabled
-                                />
-                                <p class="text-sm text-gray-500">
-                                    <Info class="inline h-4 w-4 mr-1" />
-                                    Esta es su billetera actual registrada como {{ getWalletTypeName(wallet.type) }}.
-                                </p>
-                            </div>
+
 
                             <div class="grid gap-2">
                                 <Label for="wallet_address">Nueva Dirección de Billetera</Label>
@@ -234,7 +236,7 @@ const getWalletTypeName = (typeId: string) => {
                                 <InputError class="mt-1" :message="form.errors.wallet_address" />
                             </div>
 
-                            <Alert v-if="verificationError" class="bg-red-50 border-red-200">
+                            <Alert v-if="verificationError" class=" border-red-200">
                                 <AlertCircle class="h-4 w-4 text-red-500" />
                                 <AlertTitle>Error</AlertTitle>
                                 <AlertDescription>

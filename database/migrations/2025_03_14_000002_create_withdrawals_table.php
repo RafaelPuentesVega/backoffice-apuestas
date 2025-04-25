@@ -10,8 +10,9 @@ return new class extends Migration {
         Schema::create('withdrawals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->decimal('amount', 10, 2);
+            $table->decimal('amount', 15, 2);
             $table->string('withdrawal_type');
+            $table->string('balance_type')->default('earnings');
             $table->string('wallet_address');
             $table->text('description')->nullable();
             $table->enum('status', ['pendiente', 'completado', 'rechazado'])->default('pendiente');

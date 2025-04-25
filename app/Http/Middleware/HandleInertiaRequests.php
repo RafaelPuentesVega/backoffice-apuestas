@@ -63,20 +63,38 @@ class HandleInertiaRequests extends Middleware
 
                 $permissions = $request->user()->getAllPermissions()->pluck('name')->toArray();
                 $roles = $request->user()->getRoleNames()->toArray();
+                
+                // Cargar el usuario con la relación de membresía
+                $user = $request->user()->load('membership');
 
                 return [
-                    'user' => [
-                        'name' => $request->user()->name,
-                        'email' => $request->user()->email,
-                        'created_at' => $request->user()->created_at->format('Y-m-d H:i:s'),
-                    ],
+                    'user' => $user,
                     'permissions' => base64_encode(json_encode($permissions)),
                     'roles' => base64_encode(json_encode($roles)),
                 ];
             },
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
-            ],          
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+                'warning' => fn () => $request->session()->get('warning'),
+                'info' => fn () => $request->session()->get('info'),
+            ],
+            // Añadir información sobre la ruta actual para mejorar la lógica en el frontend
+            'route' => [
+                'current' => $request->route()?->getName(),
+                'params' => $request->route()?->parameters() ?? [],
+                'previous' => url()->previous()
+            ],
+            // Agregar información para depuración cuando estamos en desarrollo
+            'debug' => config('app.debug') ? [
+                'query_string' => $request->getQueryString(),
+                'request_method' => $request->method(),
+                'is_ajax' => $request->ajax(),
+                'is_json' => $request->expectsJson(),
+                'session_id' => $request->session()->getId(),
+                'session_status' => $request->session()->isStarted(),
+            ] : null,
         ]);
     }
     

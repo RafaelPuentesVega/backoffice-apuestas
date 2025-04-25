@@ -23,6 +23,8 @@ class Withdrawal extends Model
         'payment_method',
         'payment_details',
         'processed_at',
+        'withdrawal_type',
+        'wallet_address'
     ];
 
     /**
